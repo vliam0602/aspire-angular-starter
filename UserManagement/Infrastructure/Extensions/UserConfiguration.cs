@@ -10,5 +10,8 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     {
         builder.HasIndex(x => x.Username).IsUnique();
         builder.HasIndex(x => x.Email).IsUnique();
+
+        builder.Property(x => x.Id).HasDefaultValueSql("gen_random_uuid()");
+        builder.Property(x => x.JoinDate).HasDefaultValueSql("CURRENT_TIMESTAMP");
     }
 }
