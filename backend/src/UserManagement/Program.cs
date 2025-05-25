@@ -3,8 +3,10 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 using System.Reflection;
+using UserManagement.Features.UserManagement.Validators;
 using UserManagement.Infrastructure;
 using UserManagement.Infrastructure.AppDbContexts;
+using UserManagement.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,9 +24,13 @@ builder.Services.AddRepositories();
 
 // add mediatR and fluentvalidators
 builder.Services.AddMediatR(config =>
-    config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+{
+    config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+    config.AddOpenBehavior(typeof(ValidationBehavior<,>));
+});
 
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+//builder.Services.AddValidatorsFromAssembly(Pro);
 builder.Services.AddFluentValidationAutoValidation();
 
 builder.Services.AddEndpointsApiExplorer();
@@ -46,6 +52,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ValidationExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 

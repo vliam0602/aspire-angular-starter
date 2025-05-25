@@ -23,6 +23,11 @@ public class GetUsersListHandler(
 {
     public async Task<PaginatedResult<User>> Handle(GetUsersListQuery request, CancellationToken cancellationToken)
     {
-        return await userRepository.GetUsersAsync(request);
+        return await userRepository.GetUsersAsync
+            (
+                pageIndex: request.PageIndex,
+                pageSize: request.PageSize,
+                search: request.Search
+            );
     }
 }

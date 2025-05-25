@@ -8,7 +8,10 @@ namespace UserManagement.Infrastructure.Repositories;
 
 public interface IUserRepository
 {
-    Task<PaginatedResult<User>> GetUsersAsync(GetUsersListQuery query);
+    Task<PaginatedResult<User>> GetUsersAsync(
+            int pageIndex, int pageSize, 
+            string? search = "" // add other filters and sort later
+        );
     Task<User?> GetUserByEmailAsync(string email);
     Task<User?> GetUserByQueryAsync(Expression<Func<User, bool>> query);
     Task<User?> GetUserAsync(Guid Id);
