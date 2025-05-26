@@ -41,4 +41,9 @@ var userApi = builder.AddProject<Projects.UserManagement>("usermanagement-api")
                      .WaitFor(postgres)
                      .WithReference(postgres);
 
+// Register Angular frontend
+//var frontend = builder.AddNpmApp("usermanagement-frontend", "../frontend/usermanagement")
+//    .WithNpmScript("start")
+//    .WithEndpoint(port: 4200, scheme: "http");
+
 builder.Build().Run();
