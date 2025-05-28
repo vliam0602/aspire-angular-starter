@@ -1,6 +1,7 @@
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 using System.Reflection;
 using UserManagement.Features.UserManagement.Validators;
@@ -21,6 +22,17 @@ builder.Services.AddDbContext<UserDbContext>(options =>
 
 // add repositories
 builder.Services.AddRepositories();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy
+            .AllowAnyOrigin()      // Allow all origins
+            .AllowAnyMethod()      // Allow all HTTP methods (GET, POST, etc.)
+            .AllowAnyHeader();     // Allow all headers
+    });
+});
 
 // add mediatR and fluentvalidators
 builder.Services.AddMediatR(config =>
@@ -53,9 +65,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("AllowAll");
+
 app.UseMiddleware<ValidationExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
+
 
 app.UseAuthorization();
 
