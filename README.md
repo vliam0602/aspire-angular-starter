@@ -1,5 +1,16 @@
 # Aspire Angular Starter
 
+## Table of Contents
+
+- [About](#about)
+- [Screenshots](#screenshots)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+  - [Frontend](#frontend)
+  - [Backend](#backend)
+- [How to Run](#how-to-run)
+- [API Endpoints](#api-endpoints)
+
 ## About
 
 Aspire Angular Starter is a full-stack user management application built with Angular (frontend) and .NET 8 (backend), using PostgreSQL. The app allows you to view, create, and edit users, demonstrating modern web development practices such as standalone components, reactive forms, RESTful API, Swagger, and unit testing.
