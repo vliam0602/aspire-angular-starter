@@ -1,71 +1,38 @@
-<h2>User List</h2>
+<h2 class="text-2xl font-bold text-gray-800 mb-4">User List</h2>
 
-<!-- Add button -->
-<div class="add-button">
-  <button mat-raised-button color="primary" (click)="onAddUser()">
-    <mat-icon>add</mat-icon> Add
-  </button>
-</div>
+<p-table [value]="pagedUsers.items"
+         [paginator]="true"
+         [rows]="pagedUsers.pageSize"
+         [totalRecords]="pagedUsers.totalCount"
+         [rowsPerPageOptions]="[2,3,5]"
+         [lazy]="true"
+         (onLazyLoad)="onPage($event)"
+         [first]="(pagedUsers.pageIndex - 1)*pagedUsers.pageSize"
+         w-full>
+  <ng-template pTemplate="header">
+    <tr>
+      <th>No.</th>
+      <th>Username</th>
+      <th>Email</th>
+      <th>Status</th>
+      <th>Join Date</th>
+      <th></th>
+    </tr>
+  </ng-template>
 
-<!-- User list table -->
-<table mat-table [dataSource]="pagedUsers.items" class="mat-elevation-z8">
-  <ng-container matColumnDef="no">
-    <th mat-header-cell *matHeaderCellDef> No. </th>
-    <td mat-cell *matCellDef="let element; let i = index"> 
-      {{ (pagedUsers.pageIndex - 1) * pagedUsers.pageSize + (i + 1) }}
-    </td>
-  </ng-container>
+  <ng-template pTemplate="body" let-user let-rowIndex="rowIndex">
+    <tr>
+      <td>{{ (pagedUsers.pageIndex -1) * pagedUsers.pageSize + (rowIndex + 1) }}</td>
+      <td>{{ user.username }}</td>
+      <td>{{ user.email }}</td>
+      <td>{{ user.status }}</td>
+      <td>{{ user.joinDate | date: 'longDate' }}</td>      
+      <td>
+        <p-button icon="pi pi-pencil" class="m-2" (onClick)="onEditUser(user)"/>
+        <p-button icon="pi pi-trash" (onClick)="onDeleteUser(user)"/>
+      </td>
+    </tr>    
+  </ng-template>
+</p-table>
 
-  <ng-container matColumnDef="username">
-    <th mat-header-cell *matHeaderCellDef> Username </th>
-    <td mat-cell *matCellDef="let element;"> {{element.username}} </td>
-  </ng-container>
-
-  <ng-container matColumnDef="email">
-    <th mat-header-cell *matHeaderCellDef> Email </th>
-    <td mat-cell *matCellDef="let element;"> {{element.email}} </td>
-  </ng-container>
-
-  <ng-container matColumnDef="status">
-    <th mat-header-cell *matHeaderCellDef> Status </th>
-    <td mat-cell *matCellDef="let element;">
-      {{element.status == 0 ? 'Draft' : 'Active'}}
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="joinDate">
-    <th mat-header-cell *matHeaderCellDef> JoinDate </th>
-    <td mat-cell *matCellDef="let element;"> {{element.joinDate | date: 'longDate'}} </td>  
-  </ng-container>
-
-  <ng-container matColumnDef="actions">
-    <th mat-header-cell *matHeaderCellDef> </th>
-    <td mat-cell *matCellDef="let element;">
-      <button mat-icon-button [matMenuTriggerFor]="actionMenu">
-        <mat-icon>more_vert</mat-icon>
-      </button>
-      <mat-menu #actionMenu="matMenu">
-        <button mat-menu-item (click)="onEditUser(element)">
-          <mat-icon>edit</mat-icon>
-          <span>Edit</span>
-        </button>
-        <button mat-menu-item (click)="onDeleteUser(element)">
-          <mat-icon>delete</mat-icon>
-          <span>Remove</span>
-        </button>
-      </mat-menu>
-    </td>  
-  </ng-container>
-
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
-
-<!-- Pagination -->
-<mat-paginator [length]="pagedUsers.totalCount"
-               [pageIndex]="pagedUsers.pageIndex - 1"
-               [pageSize]="pagedUsers.pageSize"
-               [pageSizeOptions]="[2, 3, 5]"
-               showFirstLastButtons="true">
-</mat-paginator>
  

@@ -31,8 +31,7 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "@angular/material/prebuilt-themes/rose-red.css",
+            "styles": [                        
               "src/styles.scss"
             ],
             "scripts": []
@@ -91,8 +90,7 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "@angular/material/prebuilt-themes/rose-red.css",
+            "styles": [                      
               "src/styles.scss"
             ],
             "scripts": []

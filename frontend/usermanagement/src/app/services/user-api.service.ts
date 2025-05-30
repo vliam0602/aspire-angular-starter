@@ -1,8 +1,10 @@
 import { inject, Injectable } from "@angular/core";
 import { ApiService } from "./api.service";
 import { User } from "../shared/models/user";
-import { PagedList } from "../shared/models/pagedList";
+import { PageList } from "../shared/models/page-list.model";
 import { HttpParams } from "@angular/common/http";
+
+const USER_URL = 'api/users';
 
 @Injectable({
     providedIn: 'root'
@@ -17,6 +19,18 @@ export class UserApiService {
                 .set('pageIndex', params.pageIndex)                
                 .set('pageSize', params.pageSize)                
         }
-        return this.api.get<PagedList<User>>('api/users', httpParams);
+        return this.api.get<PageList<User>>(USER_URL, httpParams);
+    }
+    
+    getUserById(id: string) {
+        return this.api.get<User>(`${USER_URL}/${id}`);
+    }
+
+    createUser(user: Partial<User>) {
+        return this.api.post(USER_URL, user);
+    }
+
+    editUser(id: string, user: Partial<User>) {
+        return this.api.put(`${USER_URL}/${id}`, user);
     }
 }

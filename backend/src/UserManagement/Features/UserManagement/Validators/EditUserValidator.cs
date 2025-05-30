@@ -14,7 +14,7 @@ public class EditUserValidator : AbstractValidator<EditUserCommand>
         RuleFor(x => x.Username)
             .NotEmpty().WithMessage("Username is required.");
         RuleFor(x => x.Status)
-            .NotEmpty().WithMessage("Status is required.")
+            .NotNull().WithMessage("Status is required.")
             .Must(status => Enum.IsDefined(typeof(UserStatusEnum), status))
             .WithMessage("Invalid status value.");
     }

@@ -30,7 +30,7 @@ public class UsersController(
     {
         try
         {
-            var result = await _mediator.Send(command); // chưa dùng đc fluent validtor
+            var result = await _mediator.Send(command);
             return CreatedAtAction(nameof(CreateUser), new
             {
                 Message = "Create user successfully",

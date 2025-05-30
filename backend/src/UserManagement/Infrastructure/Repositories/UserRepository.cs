@@ -43,14 +43,16 @@ public class UserRepository(
         int pageSize,
         string? search = "")
     {
-        var users = _dbContext.Users.AsQueryable();
+        var users = _dbContext.Users
+                              .OrderBy(x => x.CreatedDate)
+                              .AsQueryable();
 
         // search
         if (!string.IsNullOrEmpty(search))
         {
             var searchkey = search.Trim().ToLower();
             users = users.Where(u => u.Username.ToLower().Contains(searchkey) 
-            || u.Email.ToLower().Contains(searchkey));
+               || u.Email.ToLower().Contains(searchkey));
         }
         // filter
         // sort

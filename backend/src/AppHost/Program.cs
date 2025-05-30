@@ -16,7 +16,7 @@ var citusserver = builder
         e.Port = 15432;
         e.IsProxied = false;
     })
-    //.WithLifetime(ContainerLifetime.Persistent)
+    .WithLifetime(ContainerLifetime.Persistent)
     .WithPgAdmin();
 
 var postgres = citusserver.AddDatabase("postgres");

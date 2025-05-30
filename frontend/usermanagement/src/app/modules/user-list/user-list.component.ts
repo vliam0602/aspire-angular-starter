@@ -1,66 +1,75 @@
 import { Component, inject, ViewChild } from '@angular/core';
 import { User } from '../../shared/models/user';
-import { MatTableModule } from '@angular/material/table'
 import { UserApiService } from '../../services/user-api.service';
-import { PagedList } from '../../shared/models/pagedList';
-import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { PageList } from '../../shared/models/page-list.model';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule } from '@angular/material/menu';
+import { TableModule } from 'primeng/table';
+import { SplitButtonModule } from 'primeng/splitbutton';
+import { MenuItem } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-user-list',
   standalone: true,
   imports: [
-    MatTableModule, 
-    MatPaginatorModule, 
     CommonModule,
-    MatButtonModule,
-    MatIconModule,
-    MatMenuModule
+    TableModule,
+    SplitButtonModule,
+    ButtonModule
   ],
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.scss'
 })
 export class UserListComponent {
-  private userApi = inject(UserApiService);
-
-  pagedUsers: PagedList<User> =
+  pagedUsers: PageList<User> =
     {
       items: [],
       totalCount: 0,
       pageIndex: 1,
-      pageSize: 2
+      pageSize: 5
     };
 
-  displayedColumns: string[] = ['no', 'username', 'email', 'status', 'joinDate', 'actions'];
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  private userApi = inject(UserApiService);
+  private router = inject(Router);
 
   ngOnInit() {
     this.loadUser(this.pagedUsers.pageIndex, this.pagedUsers.pageSize);
   }
 
-  ngAfterViewInit() {
-    this.paginator.page.subscribe((event: PageEvent) => {
-      this.loadUser(event.pageIndex + 1, event.pageSize);
+  loadUser(pageIndex: number, pageSize: number) {  
+    this.userApi.getUsers({ pageIndex, pageSize }).subscribe(data => {
+      this.pagedUsers = data
     });
   }
 
-  loadUser(pageIndex: number, pageSize: number) {
-    this.userApi.getUsers({ pageIndex, pageSize }).subscribe(data =>
-      this.pagedUsers = data
-    );
+  onPage(event: any) {
+    const pageIndex = Math.floor(event.first / event.rows) + 1;
+    this.loadUser(pageIndex, event.rows);
   }
 
   onAddUser() {
-    alert('Add new user');
+    this.router.navigate(['/add-user']);
   }
   onEditUser(user: User) {
-    alert('Edit user: '+ user.username);
+    this.router.navigate(['/edit-user', user.id]);
   }
   onDeleteUser(user: User) {
-    alert('Delete user: '+ user.username);
+    alert('Delete user: ' + user.username);
+  }
+
+  getActionMenu(user: User): MenuItem[] {
+    return [
+      {
+        label: 'Edit',
+        icon: 'pi pi-pencil',
+        command: () => this.onEditUser(user)
+      },
+      {
+        label: 'Remove',
+        icon: 'pi pi-trash',
+        command: () => this.onDeleteUser(user)
+      }
+    ];
   }
 }
